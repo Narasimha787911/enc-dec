@@ -27,7 +27,7 @@ def generate_benchmark_chart():
             data[algo]['file_sizes'].append(block['file_size_bytes'] / 1024)
     
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-    fig.suptitle('Encryption Algorithm Performance Comparison', fontsize=16, fontweight='bold')
+    fig.suptitle('Encryption and Decryption Algorithm Performance Comparison', fontsize=16, fontweight='bold')
     
     algorithms = ['AES-256-GCM', 'Blowfish-256-EAX', 'ChaCha20-Poly1305']
     colors = ['#5B7FFF', '#8E5BFF', '#FF5BCD']

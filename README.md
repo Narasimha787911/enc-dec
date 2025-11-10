@@ -23,6 +23,7 @@ A comprehensive Flask web application that secures files using three industry-st
 - **Automatic Metrics**: Encryption/decryption time and file size tracked automatically
 - **Visual Comparison**: Dynamic charts comparing all three algorithms
 - **Statistics**: Average performance metrics for each algorithm
+- **Clear Chart**: Reset chart visualization without deleting blockchain ledger data
 
 ## Technical Stack
 
@@ -90,6 +91,7 @@ A comprehensive Flask web application that secures files using three industry-st
 - `GET /api/download/<filename>` - Download file
 - `GET /api/benchmark/chart` - Get benchmark chart (base64 PNG)
 - `GET /api/benchmark/stats` - Get performance statistics
+- `POST /api/benchmark/clear` - Clear chart visualization (keeps blockchain intact)
 - `GET /api/ledger` - Get all blockchain blocks
 - `GET /api/verify` - Verify blockchain integrity
 

@@ -185,5 +185,18 @@ def api_verify():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/benchmark/clear', methods=['POST'])
+def api_benchmark_clear():
+    try:
+        from datetime import datetime
+        current_timestamp = datetime.utcnow().isoformat()
+        blockchain.set_benchmark_clear_timestamp(current_timestamp)
+        return jsonify({
+            'success': True,
+            'message': 'Benchmark chart cleared successfully'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

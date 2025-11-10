@@ -30,6 +30,12 @@ class Blockchain:
                 dec_time_ms REAL
             )
         ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS benchmark_state (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            )
+        ''')
         conn.commit()
         conn.close()
     
@@ -184,3 +190,30 @@ class Blockchain:
                 return False, f"Block {i} has invalid transaction hash"
         
         return True, f"Blockchain is valid ({len(blocks)} blocks verified)"
+    
+    def get_benchmark_clear_timestamp(self):
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute('SELECT value FROM benchmark_state WHERE key = ?', ('last_cleared_at',))
+        row = cursor.fetchone()
+        conn.close()
+        return row[0] if row else None
+    
+    def set_benchmark_clear_timestamp(self, timestamp):
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT OR REPLACE INTO benchmark_state (key, value)
+            VALUES (?, ?)
+        ''', ('last_cleared_at', timestamp))
+        conn.commit()
+        conn.close()
+    
+    def get_blocks_for_benchmark(self):
+        clear_timestamp = self.get_benchmark_clear_timestamp()
+        blocks = self.get_all_blocks()
+        
+        if clear_timestamp:
+            blocks = [b for b in blocks if b['timestamp'] > clear_timestamp]
+        
+        return blocks

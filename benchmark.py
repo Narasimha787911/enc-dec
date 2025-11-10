@@ -7,7 +7,7 @@ from blockchain import Blockchain
 
 def generate_benchmark_chart():
     blockchain = Blockchain()
-    blocks = blockchain.get_all_blocks()
+    blocks = blockchain.get_blocks_for_benchmark()
     
     if not blocks:
         return None
@@ -94,7 +94,7 @@ def generate_benchmark_chart():
 
 def get_benchmark_stats():
     blockchain = Blockchain()
-    blocks = blockchain.get_all_blocks()
+    blocks = blockchain.get_blocks_for_benchmark()
     
     stats = {
         'AES-256-GCM': {'count': 0, 'avg_enc': 0, 'avg_dec': 0, 'avg_size': 0},

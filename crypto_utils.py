@@ -5,6 +5,7 @@ import time
 from Crypto.Cipher import AES, Blowfish, ChaCha20_Poly1305
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Random import get_random_bytes
+from Crypto.Hash import SHA256
 
 ALGORITHM_IDS = {
     'AES-256-GCM': 1,
@@ -15,7 +16,7 @@ ALGORITHM_IDS = {
 ALGORITHM_NAMES = {v: k for k, v in ALGORITHM_IDS.items()}
 
 def derive_key(passphrase, salt):
-    return PBKDF2(passphrase, salt, dkLen=32, count=200000, hmac_hash_module=hashlib.sha256)
+    return PBKDF2(passphrase, salt, dkLen=32, count=200000, hmac_hash_module=SHA256)
 
 def encrypt_file(file_data, passphrase, algorithm):
     start_time = time.perf_counter()

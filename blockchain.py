@@ -14,7 +14,7 @@ class Blockchain:
         cursor = conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS blocks (
-                index INTEGER PRIMARY KEY,
+                block_index INTEGER PRIMARY KEY,
                 timestamp TEXT,
                 prev_hash TEXT,
                 tx_hash TEXT,
@@ -36,7 +36,7 @@ class Blockchain:
     def get_last_block(self):
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM blocks ORDER BY index DESC LIMIT 1')
+        cursor.execute('SELECT * FROM blocks ORDER BY block_index DESC LIMIT 1')
         row = cursor.fetchone()
         conn.close()
         
@@ -125,7 +125,7 @@ class Blockchain:
     def get_all_blocks(self):
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM blocks ORDER BY index ASC')
+        cursor.execute('SELECT * FROM blocks ORDER BY block_index ASC')
         rows = cursor.fetchall()
         conn.close()
         

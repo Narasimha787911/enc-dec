@@ -1,0 +1,123 @@
+📦 PROJECT PROMPT START
+
+PROJECT TITLE:
+Blockchain-Based File Encryption and Decryption Comparison Tool  
+(Using AES-256-GCM, Blowfish-256-EAX, and ChaCha20-Poly1305)
+
+🎯 PURPOSE:
+Build a Python Flask web application that encrypts and decrypts FILES (not text)
+using three symmetric algorithms: AES-256-GCM, Blowfish-256-EAX, and ChaCha20-Poly1305.
+Each operation is recorded in a local blockchain ledger.
+Include a benchmark feature with a dynamic comparison graph that automatically updates
+based on the performance of encrypted and decrypted files (no separate uploads needed).
+
+⚙️ TECH REQUIREMENTS:
+- Language: Python 3.11+
+- Framework: Flask
+- Libraries: pycryptodome, matplotlib, pandas
+- Database: SQLite (ledger.db) or JSON (ledger.json)
+- Frontend: HTML + Bootstrap
+- Environment: Replit Free (single process, 10 agent limit, no external nodes)
+
+🧰 FEATURES:
+
+### 1️⃣ ENCRYPTION & DECRYPTION WINDOW
+- Upload any file → choose algorithm → enter passphrase.
+- Derive 256-bit key using PBKDF2 (SHA-256 + random salt).
+- Encrypt file → embed all metadata (salt, nonce, tag, algorithm) inside encrypted file header.
+- Store ciphertext in `/storage/encrypted/` and allow user to **download encrypted file**.
+- For decryption, upload the same encrypted file → the app extracts metadata from header.
+- Enter passphrase → decrypt → verify integrity (tag/hash).
+- Save decrypted file in `/storage/decrypted/` and allow user to **download it**.
+- Automatically record **encryption/decryption time, file size, and algorithm** in blockchain ledger.
+- Collected performance data is reused in the benchmark chart — no separate upload step.
+
+### 2️⃣ PERFORMANCE BENCHMARK WINDOW
+- Automatically generates a **comparison chart** from encryption/decryption logs in the blockchain ledger.
+- Compares AES-256-GCM, Blowfish-256-EAX, and ChaCha20-Poly1305 based on:
+  - Encryption time (ms)
+  - Decryption time (ms)
+  - File size (KB)
+- Dynamically rendered using Matplotlib (converted to base64 PNG for display).
+- Chart updates automatically after every new encryption/decryption operation.
+- Include a **“Clear Chart”** button to reset the benchmark view.
+
+### 3️⃣ BLOCKCHAIN LEDGER WINDOW
+- Append-only blockchain stored in `ledger.db` or `ledger.json`.
+- Each block includes:
+  {
+    index, timestamp, prev_hash, tx_hash,
+    algorithm, file_name, file_hash,
+    ciphertext_path, nonce_b64, tag_b64,
+    salt_b64, file_size_bytes,
+    enc_time_ms, dec_time_ms
+  }
+- Implement `/verify` endpoint to validate blockchain integrity.
+- Show the full ledger table in an interactive HTML table (sortable and filterable).
+
+🪙 BLOCKCHAIN STRUCTURE:
+- prev_hash ensures immutability between blocks.
+- tx_hash = SHA-256 hash of current block content.
+- Blockchain holds **only metadata**, no keys or passphrases.
+
+📊 COMPARISON METRICS TABLE:
+| Algorithm | Enc Time (ms) | Dec Time (ms) | File Size (KB) |
+|------------|---------------|---------------|----------------|
+
+📁 PROJECT STRUCTURE:
+app.py                 → Flask backend  
+crypto_utils.py        → Encryption/Decryption logic  
+blockchain.py          → Blockchain management  
+benchmark.py           → Benchmark & chart generation  
+templates/  
+ ├── index.html         (Main: Encrypt/Decrypt)  
+ ├── benchmark.html     (Performance page with auto chart)  
+ └── ledger.html        (Blockchain ledger)  
+storage/encrypted/     → Encrypted files  
+storage/decrypted/     → Decrypted files  
+ledger.db or ledger.json  
+requirements.txt  
+README.md  
+
+📦 REQUIRED PACKAGES:
+flask  
+pycryptodome  
+matplotlib  
+pandas  
+
+⚡ FUNCTIONAL NOTES:
+- Works automatically from the same input file—no separate benchmark uploads.
+- Benchmark chart builds from ledger records (time and size of encrypted/decrypted files).
+- Passphrase required for key derivation only.
+- All metadata (salt, nonce, tag, algorithm) stored inside encrypted file header.
+- Blockchain records metadata and timing info only.
+- “Clear Chart” button resets visualization data (without deleting ledger).
+- Fully functional under Replit Free limits.
+
+✅ ACCEPTANCE TESTS:
+- Encrypt and download a test file → re-upload → decrypt successfully.
+- Blockchain hash chain validates correctly.
+- Benchmark graph auto-updates after encryption/decryption.
+- “Clear Chart” button resets chart data visually.
+- No passphrases or keys stored anywhere.
+
+🧠 IMPLEMENTATION HINTS:
+- AES: `AES.new(key, AES.MODE_GCM, nonce)`
+- ChaCha20: `ChaCha20_Poly1305.new(key, nonce)`
+- Blowfish: `Blowfish.new(key, Blowfish.MODE_EAX, nonce)`
+- Key derivation: `PBKDF2(passphrase, salt, dkLen=32, count=200000)`
+- File header embeds: algorithm_id | salt | nonce | tag | ciphertext
+- Use `time.perf_counter()` for precise timing.
+- Benchmark.py reads ledger data and auto-generates Matplotlib chart.
+- Flask routes:  
+  `/` → Encrypt/Decrypt  
+  `/benchmark` → Auto Chart + Clear button  
+  `/ledger` → Blockchain table  
+  `/verify` → Integrity check
+
+⚠️ SECURITY NOTE:
+- Passphrase used temporarily for key derivation.
+- Blockchain never stores passphrases or derived keys.
+- Educational demonstration, not production security software.
+
+📦 PROJECT PROMPT END
